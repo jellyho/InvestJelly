@@ -24,7 +24,7 @@ class Mysql:
         #DB 연결 해제
         self._conn.close()
     
-class BithumbDBUpdater(Mysql):
+class BithumbDB(Mysql):
     """
     빗썸 Public API를 이용하는 pybithumb 패키지를 이용하여 주기적으로 암호화폐의 거래정보를 다운로드, mysql 데이터베이스에 저장.
     """
