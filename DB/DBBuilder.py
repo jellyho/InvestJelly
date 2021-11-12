@@ -30,7 +30,7 @@ class BithumbDBUpdater(Mysql):
     """
     #DB에 데이터베이스 생성(첫 실행시)
     def Update(self):
-		  #업데이트 시작
+	  #업데이트 시작
       self.connectDB()
       self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
       with self._conn.cursor() as curs:
@@ -90,9 +90,9 @@ class BithumbDBUpdater(Mysql):
                 print(f'Network Error')
           except Exception as e:
             print(f'Network Error')
-          #업데이트 완료             
-          print("Update Finished,", datetime.today())
-          self.disconnectDB()
+	  #업데이트 완료             
+	  print("Update Finished,", datetime.today())
+	  self.disconnectDB()
 
     def Update_Timer(self, hour):
       """
