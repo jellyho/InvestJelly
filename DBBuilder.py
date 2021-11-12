@@ -5,21 +5,30 @@ import numpy as np
 import pybithumb
 import pymysql
 
-class BithumbDBUpdater:
+class Mysql:
+    def __init__(self, host, user, password, db):
+      #데이터베이스에 접속
+      self.__host = host
+      self.__user = user
+      self.__password = password
+      self.__db = db
+
+    def __connectDB(self):
+      self.__conn = pymysql.connect(host=self.__host, user=self.__user, password=self.__password, db=self.__db, charset='utf8')
+    
+    def __disconnectDB(self):
+      self.__conn.commit()
+      self.__conn.close()
+
+    def __del__(self):
+        #DB 연결 해제
+        self.__conn.close()
+    
+class BithumbDBUpdater(Mysql):
     """
     빗썸 Public API를 이용하는 pybithumb 패키지를 이용하여 주기적으로 암호화폐의 거래정보를 다운로드, mysql 데이터베이스에 저장.
     """
-    def __init__(self, host, user, password, db):
-      #데이터베이스에 접속
-      self.host = host
-      self.user = user
-      self.password = password
-      self.db = db
-
-    def __connectDB(self):
-      self.__conn = pymysql.connect(host=self.host, user=self.user, password=self.password, db=self.db, charset='utf8')
-      self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
-      
+    self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
       #DB에 데이터베이스 생성(첫 실행시)
       with self.__conn.cursor() as curs:
           for d in self.interval:
@@ -37,14 +46,6 @@ class BithumbDBUpdater:
               """
               curs.execute(sql)
       self.__conn.commit()
-    
-    def __disconnectDB(self):
-      self.__conn.commit()
-      self.__conn.close()
-
-    def __del__(self):
-        #DB 연결 해제
-        self.__conn.close()
  
     def Update(self):
         #업데이트 시작
