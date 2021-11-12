@@ -1,13 +1,9 @@
 from datetime import datetime
 from threading import Timer
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import pybithumb
 import pymysql
-import time
-import re
-import math
 
 class BithumbDBUpdater:
     """
@@ -59,44 +55,43 @@ class BithumbDBUpdater:
         with self.__conn.cursor() as curs:
                 for d in self.interval:
                     try:
-                        sql = f"SELECT max(date) FROM bithumb_{d}_ohlcv"
-                        curs.execute(sql)
-                        rs = curs.fetchone()
-                        today = datetime.today()
-                        print('\r'+f'{d}                 ')
- 
-                        #업데이트가 필요한지 판단.
-                        if rs[0] is None or rs[0] < today:
-                          #현재 빗썸에서 거래 가능한 코인 Ticker 목록을 받아옴.
-                          tickers = pybithumb.get_tickers('KRW')
-                          for t in tickers:
-                            try:
-                              df = pybithumb.get_candlestick(t, 'KRW', d)
+                        #현재 빗썸에서 거래 가능한 코인 Ticker 목록을 받아옴.
+                        tickers = pybithumb.get_tickers('KRW')
+                        for t in tickers:
+                          try:
+                            sql = f"SELECT max(date) FROM bithumb_{d}_ohlcv WHERE code = '{t}'"
+                            curs.execute(sql)
+                            rs = curs.fetchone()
+                            df = pybithumb.get_candlestick(t, 'KRW', d)
+                            today = df.index[-1]
+                            #업데이트가 필요한지 판단.
+                            if rs[0] is None or rs[0] < today:
                               if df is None:
                                   continue
-
-                              #가장 최근 데이터는 시간대가 정확하지 않으므로 제거.
-                              df = df.drop(df.index[-1])
-
                               #업데이트할 데이터만 남기고 제거.
                               if not rs[0] is None:
                                   df = df[rs[0]:]
-                              #DB업데이트 쿼리문
-                              #업데이트 현황 프린트
-                              print('\r'+f'{t}           ', end="") 
-                              for r in df.itertuples():
-                                sql = f"""
-                                      REPLACE INTO bithumb_{d}_ohlcv VALUES ('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume})
-                                      """
-                                curs.execute(sql)
-                              self.__conn.commit()
 
-                              #과도한 API사용으로 API사용 정지 하지 않도록 속도 조절 (초당 20회 이하로 이용)
-                              time.sleep(1 / 100) 
-                            except Exception as e:
-                              print(f'{d}-{t} 업데이트 중 네트워크 오류 발생')  
+                              #가장 최근 데이터는 시간대가 정확하지 않으므로 제거.
+                              df = df.drop(today)
+
+                              #업데이트 현황 프린트
+                              print('\r'+f'Adding {len(df)} rows of {d}_{t}', end=" - ") 
+
+                              #DB업데이트 쿼리문
+                              sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
+
+                              for r in df.itertuples():
+                                sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
+                              sql = sql[:-2]
+                              curs.execute(sql)
+                              self.__conn.commit()
+                              print('finished')
+
+                          except Exception as e:
+                            print(f'Network Error')  
                     except Exception as e:
-                        print(f'{d} 업데이트 중 네트워크 오류 발생')
+                        print(f'Network Error')
  
         #업데이트 완료             
         print("Update Finished,", datetime.today())
