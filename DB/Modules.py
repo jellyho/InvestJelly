@@ -30,7 +30,7 @@ class Updater(Mysql):
   
   def update(self):
     self._connectDB()
-    for c in contentlist:
+    for c in self.contentlist:
       c.update(self._conn)
     self._disconnectDB()
     
