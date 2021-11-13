@@ -10,12 +10,16 @@ class market_krw:
   빗썸 Public API를 이용하는 pybithumb 패키지를 이용하여 주기적으로 암호화폐의 거래정보를 다운로드, mysql 데이터베이스에 저장.
   """
   #DB에 데이터베이스 생성(첫 실행시)
-  @staticmethod
+  def __init__(self, intervals='all'):
+    if intervals='all':
+      self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
+    else:
+      self.interval = intervals
+      
   def update(_conn):
     #업데이트 시작
-    self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     with _conn.cursor() as curs:
-      for d in self.interval:
+      for d in interval:
         sql = f"""
         create table if not exists bithumb_{d}_ohlcv (
         code VARCHAR(20),
