@@ -16,7 +16,10 @@ class market_krw:
     else:
       self.interval = intervals
   
-  def __str__(self):
+  def update_summary(self):
+    return f'Bithumb market_krw {self.interval}'
+  
+  def read_summary(self):
     return f'Bithumb market_krw {self.interval}'
   
   def update(self, _conn):
