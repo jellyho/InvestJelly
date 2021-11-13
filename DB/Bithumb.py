@@ -17,7 +17,7 @@ class market_krw:
       self.interval = intervals
   
   def __str__(self):
-    return f'Bithumb market_krw [{k+" " for k in self.interval}]'
+    return f'Bithumb market_krw [{self.interval}]'
   
   def update(self, _conn):
     #업데이트 시작
