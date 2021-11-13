@@ -33,7 +33,7 @@ class Updater(Mysql):
   def update(self):
     self._connectDB()
     for c in contentlist:
-      c.update()
+      c.update(self._conn)
     self._disconnectDB()
     
   def update_Timer(self, hour):
@@ -42,7 +42,7 @@ class Updater(Mysql):
     hour : 업데이트 할 시간 간격
     """
     print('Waiting for Update')
-    self.Update()
-    t = Timer(3600 * hour, self.update)
+    self.update(self._conn)
+    t = Timer(3600 * hour, self.update, self._conn)
     t.start()
 
