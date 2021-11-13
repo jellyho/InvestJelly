@@ -1,39 +1,20 @@
 from datetime import datetime
-from threading import Timer
 import pandas as pd
 import numpy as np
 import pybithumb
 import pymysql
 
-class Mysql:
-  def __init__(self, host, user, password, db):
-    #데이터베이스에 접속
-    self.__host = host
-    self.__user = user
-    self.__password = password
-    self.__db = db
 
-  def connectDB(self):
-    self._conn = pymysql.connect(host=self.__host, user=self.__user, password=self.__password, db=self.__db, charset='utf8')
-
-  def disconnectDB(self):
-    self._conn.commit()
-    self._conn.close()
-
-  def __del__(self):
-    #DB 연결 해제
-    self._conn.close()
-    
-class BithumbDBUpdater(Mysql):
+class market_krw:
   """
   빗썸 Public API를 이용하는 pybithumb 패키지를 이용하여 주기적으로 암호화폐의 거래정보를 다운로드, mysql 데이터베이스에 저장.
   """
   #DB에 데이터베이스 생성(첫 실행시)
-  def Update(self):
+  @staticmethod
+  def update(self, _conn):
     #업데이트 시작
-    self.connectDB()
     self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
-    with self._conn.cursor() as curs:
+    with _conn.cursor() as curs:
       for d in self.interval:
         sql = f"""
         create table if not exists bithumb_{d}_ohlcv (
@@ -48,10 +29,10 @@ class BithumbDBUpdater(Mysql):
         )
         """
         curs.execute(sql)
-    self._conn.commit()
-    print("Update Start", datetime.today())
+    _conn.commit()
+    print("Bithumb market_krw Update Started", datetime.today())
     #업데이트시 오류 생겨도 프로그램 종료 방지
-    with self._conn.cursor() as curs:
+    with _conn.cursor() as curs:
       for d in self.interval:
         try:
           #현재 빗썸에서 거래 가능한 코인 Ticker 목록을 받아옴.
@@ -86,22 +67,11 @@ class BithumbDBUpdater(Mysql):
 
                 sql = sql[:-2]
                 curs.execute(sql)
-                self._conn.commit()
+                _conn.commit()
                 print('finished', end="")
             except Exception as e:
               print(f'Network Error')
         except Exception as e:
           print(f'Network Error')
         #업데이트 완료             
-    print("/rUpdate Finished,", datetime.today(),"                  ")
-    self.disconnectDB()
-
-  def Update_Timer(self, hour):
-    """
-    타이머 설정으로 지정된 시간마다 업데이트
-    hour : 업데이트 할 시간 간격
-    """
-    print('Waiting for Update')
-    self.Update()
-    t = Timer(3600 * hour, self.Update)
-    t.start()
+    print("/rBithumb market_krw Update Started Update Finished,", datetime.today(),"                  ")
