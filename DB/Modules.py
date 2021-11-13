@@ -47,7 +47,7 @@ class Updater(Mysql):
     hour : 업데이트 할 시간 간격
     """
     print('Waiting for Update')
-    self.update(self._conn)
+    self.update()
     t = Timer(3600 * hour, self.update, self._conn)
     t.start()
 
