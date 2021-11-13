@@ -50,3 +50,13 @@ class Updater(Mysql):
     t = Timer(3600 * hour, self.update, self._conn)
     t.start()
 
+class Reader(Mysql):
+  
+  def read(self):
+    self._connectDB()
+    output = []
+    for c in self.contentlist:
+      self.output.append(c.read(self._conn))
+    self._disconnectDB()
+    
+    return output
