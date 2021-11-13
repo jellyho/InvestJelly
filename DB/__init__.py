@@ -1,1 +1,1 @@
-from .Crypto import BithumbDBUpdater
+from .Modules import Updater
