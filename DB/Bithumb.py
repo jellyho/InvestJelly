@@ -11,7 +11,7 @@ class market_krw:
   """
   #DB에 데이터베이스 생성(첫 실행시)
   @staticmethod
-  def update(self, _conn):
+  def update(_conn):
     #업데이트 시작
     self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     with _conn.cursor() as curs:
