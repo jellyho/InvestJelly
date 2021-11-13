@@ -82,14 +82,18 @@ class BithumbDB(Mysql):
                   
                   for r in df.itertuples():
                       sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
+		
                   sql = sql[:-2]
                   curs.execute(sql)
                   self._conn.commit()
                   print('finished')
+		
               except Exception as e:
                 print(f'Network Error')
+		
           except Exception as e:
             print(f'Network Error')
+	
 	  #업데이트 완료             
 	  print("Update Finished,", datetime.today())
 	  self.disconnectDB()
