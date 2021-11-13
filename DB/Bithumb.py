@@ -16,10 +16,10 @@ class market_krw:
     else:
       self.interval = intervals
       
-  def update(_conn):
+  def update(self, _conn):
     #업데이트 시작
     with _conn.cursor() as curs:
-      for d in interval:
+      for d in self.interval:
         sql = f"""
         create table if not exists bithumb_{d}_ohlcv (
         code VARCHAR(20),
