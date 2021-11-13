@@ -1,8 +1,6 @@
-from datetime import datetime
 from threading import Timer
 import pandas as pd
 import numpy as np
-import pybithumb
 import pymysql
 
 class Mysql:
