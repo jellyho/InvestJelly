@@ -93,7 +93,7 @@ class BithumbDBUpdater(Mysql):
         except Exception as e:
           print(f'Network Error')
         #업데이트 완료             
-    print("Update Finished,", datetime.today())
+    print("/rUpdate Finished,", datetime.today(),"                  ")
     self.disconnectDB()
 
   def Update_Timer(self, hour):
@@ -103,5 +103,5 @@ class BithumbDBUpdater(Mysql):
     """
     print('Waiting for Update')
     self.Update()
-    t = Timer(3600 * hour, self.Update_Timer)
+    t = Timer(3600 * hour, self.Update)
     t.start()
