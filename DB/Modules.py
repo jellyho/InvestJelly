@@ -48,7 +48,7 @@ class Updater(Mysql):
     """
     print('Waiting for Update')
     self.update()
-    t = Timer(3600 * hour, self.update, self._conn)
+    t = Timer(3600 * hour, self.update)
     t.start()
 
 class Reader(Mysql):
