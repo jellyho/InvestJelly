@@ -76,7 +76,7 @@ class BithumbDBUpdater(Mysql):
                 
                 #업데이트 현황 프린트
                 print('\r                                                  ',end="")
-                print(f'Adding {len(df)} rows of {d}_{t}', end=" - ") 
+                print(f'\rAdding {len(df)} rows of {d}_{t}', end=" - ") 
                 
                 #DB업데이트 쿼리문
                 sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
