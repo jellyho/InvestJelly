@@ -22,6 +22,11 @@ class Mysql:
   def add(self, content):
     self.contentlist.append(content)
     
+  def Summary(self):
+    for c in self.contentlist:
+      print('------------------------------------------')
+      print(c)
+    
   def __del__(self):
     #DB 연결 해제
     self._conn.close()
