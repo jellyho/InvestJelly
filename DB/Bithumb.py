@@ -84,4 +84,4 @@ class market_krw:
         except Exception as e:
           print(f'Network Error')
         #업데이트 완료             
-    print("\rBithumb market_krw Update Started Update Finished,", datetime.today(),"                  ")
+    print("\rBithumb market_krw Update Finished,", datetime.today(),"                  ")
