@@ -56,7 +56,7 @@ class Reader(Mysql):
     self._connectDB()
     output = []
     for c in self.contentlist:
-      self.output.append(c.read(self._conn))
+      output.append(c.read(self._conn))
     self._disconnectDB()
     
     return output
