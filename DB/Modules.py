@@ -24,7 +24,8 @@ class Mysql:
     
   def __del__(self):
     #DB 연결 해제
-    self._conn.close()
+    if self._conn.open:
+      self._conn.close()
     
 class Updater(Mysql):
   
