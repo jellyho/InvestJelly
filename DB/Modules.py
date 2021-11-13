@@ -22,7 +22,7 @@ class Mysql:
   def add(self, content):
     self.contentlist.append(content)
     
-  def Summary(self):
+  def summary(self):
     for c in self.contentlist:
       print('------------------------------------------')
       print(c)
