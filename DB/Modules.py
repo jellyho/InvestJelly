@@ -22,12 +22,6 @@ class Mysql:
   def add(self, content):
     self.contentlist.append(content)
     
-  def summary(self):
-    print('---------------------------------------------------------------------------------------------')
-    for c in self.contentlist:
-      print(c)
-    print('---------------------------------------------------------------------------------------------')
-    
   def __del__(self):
     #DB 연결 해제
     self._conn.close()
@@ -39,6 +33,12 @@ class Updater(Mysql):
     for c in self.contentlist:
       c.update(self._conn)
     self._disconnectDB()
+    
+  def summary(self):
+    print('---------------------------------------------------------------------------------------------')
+    for c in self.contentlist:
+      print(c.update_summary)
+    print('---------------------------------------------------------------------------------------------')  
     
   def update_Timer(self, hour):
     """
@@ -60,3 +60,9 @@ class Reader(Mysql):
     self._disconnectDB()
     
     return output
+  
+  def summary(self):
+    print('---------------------------------------------------------------------------------------------')
+    for c in self.contentlist:
+      print(c.read_summary)
+    print('---------------------------------------------------------------------------------------------')  
