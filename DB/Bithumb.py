@@ -15,7 +15,10 @@ class market_krw:
       self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     else:
       self.interval = intervals
-      
+  
+  def __str__(self):
+    return f'Bithumb market_krw [{k+" " for k in self.interval}]'
+  
   def update(self, _conn):
     #업데이트 시작
     with _conn.cursor() as curs:
