@@ -16,13 +16,10 @@ class market_krw:
     else:
       self.interval = intervals
   
-  def update_summary(self):
+  def _summary(self):
     return f'Bithumb market_krw {self.interval}'
   
-  def read_summary(self):
-    return f'Bithumb market_krw {self.interval}'
-  
-  def update(self, _conn):
+  def _update(self, _conn):
     #업데이트 시작
     with _conn.cursor() as curs:
       for d in self.interval:
