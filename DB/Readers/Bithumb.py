@@ -1,5 +1,5 @@
 import pandas as pd
-import ..Structures import TimeSeries, Ohlcv
+from ..Structures import TimeSeries, Ohlcv
 class tickers:
   def __init__(self, intervals):
     if intervals == 'all':
