@@ -11,7 +11,7 @@ class market_krw:
   """
   #DB에 데이터베이스 생성(첫 실행시)
   def __init__(self, intervals='all'):
-    if intervals is 'all':
+    if intervals == 'all':
       self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     else:
       self.interval = intervals
