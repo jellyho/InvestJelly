@@ -32,13 +32,13 @@ class Updater(Mysql):
   def update(self):
     self._connectDB()
     for c in self.contentlist:
-      c.update(self._conn)
+      c._update(self._conn)
     self._disconnectDB()
     
   def summary(self):
     print('---------------------------------------------------------------------------------------------')
     for c in self.contentlist:
-      print(c.update_summary)
+      print(c._summary)
     print('---------------------------------------------------------------------------------------------')  
     
   def update_Timer(self, hour):
