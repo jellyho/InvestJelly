@@ -1,7 +1,7 @@
 import pandas as pd
 from ...Structures import TimeSeries, Ohlcv
 
-class tickers:
+class tickers_krw:
   def __init__(self, intervals):
     if intervals == 'all':
       self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
