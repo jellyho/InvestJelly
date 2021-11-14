@@ -1,7 +1,7 @@
-from threading import Timer
 import pandas as pd
 import numpy as np
 import pymysql
+import time
 
 class Mysql:
   def __init__(self, host, user, password, db):
@@ -46,10 +46,10 @@ class Updater(Mysql):
     타이머 설정으로 지정된 시간마다 업데이트
     hour : 업데이트 할 시간 간격
     """
-    print('Waiting for Update')
-    self.update()
-    t = Timer(3600 * hour, self.update)
-    t.start()
+    while True:
+      print('Waiting for Update')
+      self.update()
+      time.sleep(int(hour * 3600))
 
 class Reader(Mysql):
   
