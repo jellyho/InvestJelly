@@ -22,11 +22,6 @@ class Mysql:
   def add(self, content):
     self.contentlist.append(content)
     
-  def __del__(self):
-    #DB 연결 해제
-    if self._conn.open:
-      self._conn.close()
-    
 class Updater(Mysql):
   
   def update(self):
