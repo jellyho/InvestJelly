@@ -38,7 +38,7 @@ class Updater(Mysql):
   def summary(self):
     print('---------------------------------------------------------------------------------------------')
     for c in self.contentlist:
-      print(c._summary)
+      print(c._summary())
     print('---------------------------------------------------------------------------------------------')  
     
   def update_Timer(self, hour):
