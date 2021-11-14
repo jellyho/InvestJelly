@@ -15,5 +15,5 @@ class tickers:
     with _conn.cursor() as curs:
       for i in self.interval:
         sql = f"SELECT DISTINCT code FROM bithumb_{i}_ohlcv"
-        df[i] = pd.read_sql(sql, _conn)[:][0]
+        df[i] = pd.read_sql(sql, _conn).iloc[:,0].values
     return TimeSeries(df, title=self._summary())
