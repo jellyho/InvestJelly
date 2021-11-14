@@ -8,7 +8,7 @@ class TimeSeries:
     pass
 
   def __str__(self):
-    return f'{self.title} : from {} to {}, {} Rows'
+    return f'{self.title} : from {df.index[0]} to {df.index[-1]}, {len(df)} Rows'
 
   def MA(self, window, columns=None):
     """
