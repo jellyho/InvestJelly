@@ -57,7 +57,7 @@ class Reader(Mysql):
     self._connectDB()
     output = []
     for c in self.contentlist:
-      output.append(c.read(self._conn))
+      output.append(c._read(self._conn))
     self._disconnectDB()
     
     return output
@@ -65,5 +65,5 @@ class Reader(Mysql):
   def summary(self):
     print('---------------------------------------------------------------------------------------------')
     for c in self.contentlist:
-      print(c.read_summary)
+      print(c._summary())
     print('---------------------------------------------------------------------------------------------')  
