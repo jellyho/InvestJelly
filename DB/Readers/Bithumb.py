@@ -58,6 +58,7 @@ class ohlcv_krw:
     return f'Bithumb ohlcv_krw {self.tickers}-{self.interval}-{self.amount} datas before {self.date}'
   
   def _read(self, _conn):
+    
     if self.tickers == 'random':
       df = pd.DataFrame()
       with _conn.cursor() as curs:
@@ -69,7 +70,6 @@ class ohlcv_krw:
         checked = True
         code = df[self.interval[0]][randrange(0,len(df[self.interval[0]]))]
         for i in self.interval:
-          print(code, df[i].values)
           if code in df[i].values:
             continue
           else:
@@ -77,6 +77,7 @@ class ohlcv_krw:
             break
       self.tickers = [code]
     return self.tickers
+  
     """
     if start is None:
       with _conn.cursor() as curs:
