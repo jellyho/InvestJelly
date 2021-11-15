@@ -1,4 +1,5 @@
 import pandas as pd
+from random import randrange
 from ...Structures import TimeSeries, Ohlcv
 
 class tickers_krw:
@@ -66,7 +67,7 @@ class ohlcv_krw:
       checked = False
       while not checked:
         checked = True
-        code = df[self.interval[0]][random.range(0,len(df[self.interval[0]]))]
+        code = df[self.interval[0]][randrange(0,len(df[self.interval[0]]))]
         for i in self.interval:
           if code in df[self.interval[i]]:
             continue
