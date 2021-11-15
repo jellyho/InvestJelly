@@ -43,10 +43,6 @@ class ohlcv_krw:
     
     if intervals == 'all':
       self.interval = self.__interval_order
-    else:
-      self.interval = intervals
-      
-    if intervals == 'all':
       if type(amount) is int:
         self.amount = [amount for _ in range(len(intervals))]
       elif type(amount) is list and len(amount) == len(self.interval):
@@ -54,6 +50,7 @@ class ohlcv_krw:
       else:
         raise ValueError('amount data is not fit with intervals')
     else:
+      self.interval = intervals
       if type(amount) is int:
         self.amount = [amount for _ in range(len(intervals))]
       elif type(amount) is list and len(amount) == len(self.interval):
