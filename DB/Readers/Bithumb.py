@@ -44,7 +44,7 @@ class ohlcv_krw:
     if intervals == 'all':
       self.interval = self.__interval_order
       if type(amount) is int:
-        self.amount = [amount for _ in range(len(intervals))]
+        self.amount = [amount for _ in range(len(self.__interval_order))]
       elif type(amount) is list and len(amount) == len(self.interval):
         self.amount = amount
       else:
