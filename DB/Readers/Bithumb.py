@@ -35,7 +35,7 @@ class ohlcv_krw:
     self.tickers = tickers
     
     if date == 'latest':
-      self.date = datetime.now(Timezone('Asia/Seoul'))
+      self.date = datetime.now(timezone('Asia/Seoul'))
     else:
       self.date = date
       
