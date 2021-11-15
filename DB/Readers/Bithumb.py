@@ -1,6 +1,9 @@
 import pandas as pd
 from random import randrange
+from datetime import datetime
+from pytz import timezone
 from ...Structures import TimeSeries, Ohlcv
+
 
 class tickers_krw:
   def __init__(self, intervals):
@@ -30,10 +33,16 @@ class ohlcv_krw:
   def __init__(self, tickers='random', intervals='all', date='latest', amount=50):
     
     self.tickers = tickers
-    self.date = date
+    
+    if date = 'latest':
+      self.date = datetime.now(Timezone('Asia/Seoul'))
+    else:
+      self.date = date
+      
+    self.__interval_order = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     
     if intervals == 'all':
-      self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
+      self.interval = self.__interval_order
     else:
       self.interval = intervals
       
@@ -78,6 +87,7 @@ class ohlcv_krw:
       self.tickers = [code]
     return self.tickers
   
+    
     """
     if start is None:
       with _conn.cursor() as curs:
