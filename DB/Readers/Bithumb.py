@@ -57,7 +57,7 @@ class ohlcv_krw:
     return f'Bithumb ohlcv_krw {self.tickers}-{self.interval}-{self.amount} datas before {self.date}'
   
   def _read(self, _conn):
-    if self.tickers = 'random':
+    if self.tickers == 'random':
       df = pd.DataFrame()
       with _conn.cursor() as curs:
         for i in self.interval:
