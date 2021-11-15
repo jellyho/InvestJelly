@@ -21,20 +21,61 @@ class tickers_krw:
 class ohlcv_krw:
   """
   기간 입력 안되었을 때 최소 일자, 최대 일자로 초기화 됨
-  code: 불러올 코인의 코드
-  interval: 불러올 거래 데이터 간격
-  start: 불러올 데이터의 시작 날짜 %Y-%m-%d %H:%M:%S
+  tickers: 불러올 코인의 코드, random
+  intervals: 불러올 거래 데이터 간격 []
+  date: 불러올 데이터의 시작 날짜 %Y-%m-%d %H:%M:%S , random , latest
+  amount: [] intervals 당 amount
   """
-  def __init__(self, intervals):
+  def __init__(self, tickers='random', intervals='all', date='latest', amount=50):
+    
+    self.tickers = tickers
+    self.date = date
+    
     if intervals == 'all':
       self.interval = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     else:
       self.interval = intervals
       
+    if intervals == 'all':
+      if type(amount) is int:
+        self.amount = [amount for _ in range(len(intervals))]
+      elif type(amount) is list and len(amount) == len(self.interval):
+        self.amount = amount
+      else:
+        raise ValueError('amount data is not fit with intervals')
+    else:
+      if type(amount) is int:
+        self.amount = [amount for _ in range(len(intervals))]
+      elif type(amount) is list and len(amount) == len(self.interval):
+        self.amount = amount
+      else:
+        raise ValueError('amount data is not fit with intervals')
+    
+    
+      
   def _summary(self):
-    return f'Bithumb tickers {self.interval}'
+    return f'Bithumb ohlcv_krw {self.tickers}-{self.interval}-{self.amount} datas before {self.date}'
   
   def _read(self, _conn):
+    if self.tickers = 'random':
+      df = pd.DataFrame()
+      with _conn.cursor() as curs:
+        for i in self.interval:
+          sql = f"SELECT DISTINCT code FROM bithumb_{i}_ohlcv"
+          df[i] = pd.read_sql(sql, _conn).iloc[:,0].values
+      checked = False
+      while not checked:
+        checked = True
+        code = df[self.interval[0]][random.range(0,len(df[self.interval[0]]))]
+        for i in self.interval:
+          if code in df[self.interval[i]]:
+            continue
+          else:
+            checked = False
+            break
+      self.tickers = [code]
+    return self.tickers
+    """
     if start is None:
       with _conn.cursor() as curs:
         sql = f"SELECT min(date) FROM bithumb_{interval}_ohlcv WHERE code = '{code}'"
@@ -64,3 +105,4 @@ class ohlcv_krw:
     print(f'Bithumb Ohlcv_krw {interval} {code} from {df.index[0]} to {df.index[-1]}, {len(df)} Rows Loaded')
 
     return Ohlcv(df, title=f'Bithumb Ohlcv_krw {interval} {code}')
+    """
