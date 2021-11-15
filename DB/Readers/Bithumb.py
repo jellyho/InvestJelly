@@ -69,7 +69,8 @@ class ohlcv_krw:
         checked = True
         code = df[self.interval[0]][randrange(0,len(df[self.interval[0]]))]
         for i in self.interval:
-          if code in df[i]:
+          print(code, df[i].values)
+          if code in df[i].values:
             continue
           else:
             checked = False
