@@ -93,7 +93,7 @@ class ohlcv_krw:
         
       for i in range(len(self.interval)):
         with _conn.cursor() as curs:
-          sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv ORDER BY date DESC WHERE code = '{self.ticker}' and date <= '{self.date}' LIMIT {self.amount[i]}"
+          sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{self.ticker}' and date <= '{self.date}' ORDER BY date DESC LIMIT {self.amount[i]}"
           df = pd.read_sql(sql, _conn)
           if len(df) == self.amount[i]:
             df.index = df['date']
