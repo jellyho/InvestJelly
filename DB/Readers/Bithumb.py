@@ -98,7 +98,7 @@ class ohlcv_krw:
           if len(df) == self.amount[i]:
             df.index = df['date']
             df = df[['code', 'open', 'high', 'low', 'close', 'volume']]
-            result.append(Ohlcv(df, title='Bitumb Ohlcv_krw {self.interval[i]} {self.ticker}, {len(df)} Rows'))
+            result.append(Ohlcv(df, title=f'Bitumb Ohlcv_krw {self.interval[i]} {self.ticker}, {len(df)} Rows'))
           elif self.ticker == 'random':
             checked = False
             break
