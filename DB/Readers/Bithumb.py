@@ -35,7 +35,7 @@ class ohlcv_krw:
     self.ticker = ticker
     
     if date == 'latest':
-      self.date = datetime.now(timezone('Asia/Seoul'))
+      self.date = datetime.now(timezone('Asia/Seoul'))[:19]
     else:
       self.date = date
       
