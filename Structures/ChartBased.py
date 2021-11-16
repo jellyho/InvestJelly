@@ -28,7 +28,7 @@ class Ohlcv(TimeSeries):
     """
     d = self.df.copy()
     d['std'] = d['close'].rolling(window=window).std()
-    d['middle'] = self.MA(['close'], window)
+    d['middle'] = self.MA(window, ['close'])
     d['upper'] = d['middle'] + (d['std'] * 2)
     d['lower'] = d['middle'] - (d['std'] * 2)
     d['pb'] = (d['close'] - d['lower']) / (d['upper'] - d['lower'])
