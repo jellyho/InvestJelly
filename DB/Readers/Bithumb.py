@@ -38,7 +38,7 @@ class ohlcv_krw:
       self.date = datetime.now(timezone('Asia/Seoul'))
     else:
       self.date = date
-    self.date = datetime.strftime(self.date, '%m-%d-%Y %H:%M:%S')
+    self.date = datetime.strftime(self.date, '%Y-%m-%d %H:%M:%S')
     self.__interval_order = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     
     if intervals == 'all':
