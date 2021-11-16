@@ -35,10 +35,10 @@ class ohlcv_krw:
     self.ticker = ticker
     
     if date == 'latest':
-      self.date = datetime.now(timezone('Asia/Seoul'))[:19]
+      self.date = datetime.now(timezone('Asia/Seoul'))
     else:
       self.date = date
-      
+    self.date = datetime.strftime(self.date, '%m-%d-%Y %H:%M:%S')
     self.__interval_order = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     
     if intervals == 'all':
