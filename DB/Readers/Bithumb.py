@@ -88,7 +88,7 @@ class ohlcv_krw:
     result = []
     while not checked:
       checked = True
-      if self.ticker = 'random':
+      if self.ticker == 'random':
         self.ticker = pickticker()
         
       for i in range(len(self.interval)):
