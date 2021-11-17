@@ -9,13 +9,23 @@ class TimeSeries:
 
   def __str__(self):
     return f'{self.title} : from {self.df.index[0]} to {self.df.index[-1]}, {len(self.df)} Rows'
+  
+  def __repr__(self):
+    return f'{self.title} : from {self.df.index[0]} to {self.df.index[-1]}, {len(self.df)} Rows'
 
-  def MA(self, window, columns=None):
+  def __getitem__(self, i):
+        return self.df[i]
+
+  def __len__(self):
+      return len(self.df)
+
+  def MA(self, window, columns='all'):
     """
-    Moving Average
+    Moving Average\n
     window: window
+    columns: 'all' or columns list [,,]
     """
-    if columns is None:
+    if columns == 'all':
       return self.df.rolling(window=window).mean()
     else:
       return self.df[columns].rolling(window=window).mean()
@@ -23,8 +33,8 @@ class TimeSeries:
 class Ohlcv(TimeSeries):
   def BB(self, window):
     """
-    볼린저 밴드 가져오기 
-    window: 이동평균 크기
+    볼린저 밴드 가져오기\n
+    window: window
     """
     d = self.df.copy()
     d['std'] = d['close'].rolling(window=window).std()
@@ -59,7 +69,7 @@ class Ohlcv(TimeSeries):
 
   def stch_RSI(self, window):
     """
-    스토캐스틱 RSI
+    스토캐스틱 RSI\n
     window = [highwindow, lowwindow]
     """
     d = self.df.copy()

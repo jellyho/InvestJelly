@@ -33,11 +33,9 @@ class ohlcv_krw:
   def __init__(self, ticker='random', intervals='all', date='latest', amount=50):
     
     self.ticker = ticker
-    
     if date == 'latest':
       self.date = datetime.now(timezone('Asia/Seoul'))
-    else:
-      self.date = date
+
     self.date = datetime.strftime(self.date, '%Y-%m-%d %H:%M:%S')
     self.__interval_order = ['1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h' ]
     
@@ -83,18 +81,23 @@ class ohlcv_krw:
               checked = False
               break
         return code
-    
+
+    def pickdate():
+      sql = f"SELECT max(date) FROM bithumb_{self.interval[i]}_ohlcv"
+
     checked = False
     result = []
     while not checked:
       checked = True
       if self.ticker == 'random':
-        self.ticker = pickticker()
+        self.ticker += pickticker()
+      
+
         
       for i in range(len(self.interval)):
         with _conn.cursor() as curs:
           sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{self.ticker}' and date <= '{self.date}' ORDER BY date DESC LIMIT {self.amount[i]}"
-          df = pd.read_sql(sql, _conn)
+          df = pd.read_sql(sql, _conn).iloc[::-1]
           if len(df) == self.amount[i]:
             df.index = df['date']
             df = df[['code', 'open', 'high', 'low', 'close', 'volume']]
