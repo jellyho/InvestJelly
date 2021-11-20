@@ -60,7 +60,7 @@ class ohlcv_krw:
                   df = df[rs[0]:]
                 
                 #가장 최근 데이터는 시간대가 정확하지 않으므로 제거.
-                df = df.drop(today)
+                #df = df.drop(today)
                 
                 #업데이트 현황 프린트
                 print('\r                                                  ',end="")
