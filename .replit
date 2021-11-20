@@ -1,2 +1,0 @@
-language = "bash"
-run = "cd .. && python3 -m InvestJelly.testCode"
