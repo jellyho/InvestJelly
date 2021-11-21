@@ -104,8 +104,8 @@ class ohlcv_krw:
             return datetime.datetime.strftime(data, '%Y-%m-%d %H:%M:%S')
 
         def pickdate(ti):
-            val = 10
-            i = '1m'
+            val = self.__interval_order['24h']
+            i = '24h'
 
             #제일 우선순위 높은 interval 구하기
             for j in self.interval:
