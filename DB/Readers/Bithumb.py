@@ -43,15 +43,15 @@ class ohlcv_krw:
         self.date = _date
 
         self.__interval_order = {
-            '1m': 0,
-            '3m': 1,
-            '5m': 2,
-            '10m': 3,
-            '30m': 4,
-            '1h': 5,
-            '6h': 6,
-            '12h': 7,
-            '24h': 8
+            '1m': datetime.timedelta(minutes=1),
+            '3m': datetime.timedelta(minutes=3),
+            '5m': datetime.timedelta(minutes=5),
+            '10m': datetime.timedelta(minutes=10),
+            '30m': datetime.timedelta(minutes=30),
+            '1h': datetime.timedelta(hours=1),
+            '6h': datetime.timedelta(hours=6),
+            '12h': datetime.timedelta(hours=12),
+            '24h': datetime.timedelta(days=1)
         }
 
         if intervals == 'all':
@@ -152,7 +152,8 @@ class ohlcv_krw:
             res = pickdate(code)
             if res:
                 for i in range(len(self.interval)):
-                    sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{code}' and date <= '{res}' ORDER BY date DESC limit {self.amount[i]}"
+                    ser = res - self.__interval_order[self.interval[i]]
+                    sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{code}' and date <= '{res} and date >= '{ser}' ORDER BY date DESC"
                     df = pd.read_sql(sql, _conn).iloc[::-1, :]
                     if len(df) == self.amount[i]:
                         df.index = df['date']
