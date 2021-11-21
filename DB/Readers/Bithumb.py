@@ -1,6 +1,6 @@
 import pandas as pd
 from random import randrange
-from datetime import datetime
+import datetime
 from ...Structures import Ohlcv
 
 
@@ -101,7 +101,7 @@ class ohlcv_krw:
                 return self.ticker
 
         def tostr(data):
-            return datetime.strftime(data, '%Y-%m-%d %H:%M:%S')
+            return datetime.datetime.strftime(data, '%Y-%m-%d %H:%M:%S')
 
         def pickdate(ti):
             val = 10
@@ -126,7 +126,7 @@ class ohlcv_krw:
                 elif self.date == 'random':
                     return tostr(df['date'][df.index[randrange(0, len(df))]])
                 else:
-                    if datetime.strptime(self.date,
+                    if datetime.datetime.strptime(self.date,
                                          '%Y-%m-%d %H:%M:%S') in df['date']:
                         return self.date
                     else:
