@@ -122,9 +122,9 @@ class ohlcv_krw:
             if len(df) >= self.amount[i]:
                 df = df.iloc[self.amount[i]:, :]
                 if self.date == 'latest':
-                    return tostr(df['date'][df.index[-1]])
+                    return (df['date'][df.index[-1]])
                 elif self.date == 'random':
-                    return tostr(df['date'][df.index[randrange(0, len(df))]])
+                    return (df['date'][df.index[randrange(0, len(df))]])
                 else:
                     if datetime.datetime.strptime(self.date,
                                          '%Y-%m-%d %H:%M:%S') in df['date']:
@@ -152,8 +152,10 @@ class ohlcv_krw:
             res = pickdate(code)
             if res:
                 for i in range(len(self.interval)):
-                    ser = res - self.__interval_order[self.interval[i]]
-                    sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{code}' and date <= '{res} and date >= '{ser}' ORDER BY date DESC"
+                    ser = res - self.__interval_order[self.interval[i]] * self.amount[i]
+                    res = tostr(res)
+                    ser = tostr(ser)
+                    sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{code}' and date <= '{res}' and date > '{ser}' ORDER BY date DESC"
                     df = pd.read_sql(sql, _conn).iloc[::-1, :]
                     if len(df) == self.amount[i]:
                         df.index = df['date']
@@ -162,6 +164,8 @@ class ohlcv_krw:
                         ]]
                         result.append(
                             Ohlcv(df, title=f"{code}-{self.interval[i]}"))
+                    else:
+                      print(len(df), self.amount[i])
             else:
                 checked = False
                 result = []
