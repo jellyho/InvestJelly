@@ -17,7 +17,7 @@ class ohlcv_krw:
             self.interval = intervals
 
     def _summary(self):
-        return f'Bithumb market_krw {self.interval}'
+        return f'Bithumb ohlcv_krw {self.interval}'
 
     def _update(self, _conn):
         #업데이트 시작
@@ -37,7 +37,7 @@ class ohlcv_krw:
         """
                 curs.execute(sql)
         _conn.commit()
-        print("Bithumb market_krw Update Started", datetime.today())
+        print("Bithumb ohlcv_krw Update Started", datetime.today())
         #업데이트시 오류 생겨도 프로그램 종료 방지
         with _conn.cursor() as curs:
             for d in self.interval:
@@ -46,42 +46,26 @@ class ohlcv_krw:
                     tickers = pybithumb.get_tickers('KRW')
                     for t in tickers:
                         try:
-                            sql = f"SELECT max(date) FROM bithumb_{d}_ohlcv WHERE code = '{t}'"
-                            curs.execute(sql)
-                            rs = curs.fetchone()
                             df = pybithumb.get_candlestick(t, 'KRW', d)
-                            today = df.index[-1]
-                            #업데이트가 필요한지 판단.
-                            if rs[0] is None or rs[0] < today:
-                                if df is None:
-                                    continue
-                                #업데이트할 데이터만 남기고 제거.
-                                if not rs[0] is None:
-                                    df = df[rs[0]:]
+                            print(
+                                '\r                                                  ',
+                                end="")
+                            print(f'\rAdding {len(df)} rows of {d}_{t}',
+                                  end=" - ")
 
-                                #가장 최근 데이터는 시간대가 정확하지 않으므로 제거.
-                                #df = df.drop(today)
+                            #DB업데이트 쿼리문
+                            sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
 
-                                #업데이트 현황 프린트
-                                print(
-                                    '\r                                                  ',
-                                    end="")
-                                print(f'\rAdding {len(df)} rows of {d}_{t}',
-                                      end=" - ")
+                            for r in df.itertuples():
+                                sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
 
-                                #DB업데이트 쿼리문
-                                sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
-
-                                for r in df.itertuples():
-                                    sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
-
-                                sql = sql[:-2]
-                                curs.execute(sql)
-                                _conn.commit()
-                                print('finished', end="")
-                        except Exception as e:
+                            sql = sql[:-2]
+                            curs.execute(sql)
+                            _conn.commit()
+                            print('finished', end="")
+                        except Exception:
                             print(f'Network Error')
-                except Exception as e:
+                except Exception:
                     print(f'Network Error')
                 #업데이트 완료
         print("\rBithumb market_krw Update Finished,", datetime.today(),
