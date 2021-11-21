@@ -1,9 +1,11 @@
+import numpy as np
+
 class TimeSeries:
   def __init__(self, df, title=None):
     self.df = df
     self.columns = df.columns
     self.title = title
-
+    self.Indicators = {'MA': self.MA}
   def __del__(self):
     pass
 
@@ -14,7 +16,10 @@ class TimeSeries:
     return f'{self.title} : from {self.df.index[0]} to {self.df.index[-1]}, {len(self.df)} Rows'
 
   def __getitem__(self, i):
-        return self.df[i]
+        if i in self.columns:
+          return self.df[i]
+        elif i in list(self.Indicators.keys()):
+          return self.Indicators[i]
 
   def __len__(self):
       return len(self.df)
@@ -31,6 +36,13 @@ class TimeSeries:
       return self.df[columns].rolling(window=window).mean()
 
 class Ohlcv(TimeSeries):
+  def __init__(self, df, title=None):
+    super(Ohlcv, self).__init__(df, title)
+    self.Indicators['BB'] = self.BB
+    self.Indicators['MFI'] = self.MFI
+    self.Indicators['stch_RSI'] = self.stch_RSI
+    self.Indicators['CCI'] = self.CCI
+
   def BB(self, window):
     """
     볼린저 밴드 가져오기\n
