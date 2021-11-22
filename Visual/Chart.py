@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 
 def CandleChart(data, show='auto', tradehist=None):
     subplotli = [5]    
-    print(data)
     fig, axs = plt.subplots(
         len(subplotli),
         1,
@@ -13,7 +12,6 @@ def CandleChart(data, show='auto', tradehist=None):
                  0.4 * (0.75 * (12 + 4 * (len(subplotli) - 1) * 0.6))))
 
     plt.xticks(rotation=90, fontsize=3)
-    plt.grid(True)
 
     fig.suptitle(f"{data['code'][0]} - SimplePlot")
 
@@ -41,12 +39,12 @@ def CandleChart(data, show='auto', tradehist=None):
             bottom=posdat['open'],
             height=posdat['close'] - posdat['open'],
             color='red',alpha=1,
-            width=inter)
+            width=inter, edgecolor='white',linewidth=0.4)
     axs.bar(x=negdat.index,
             bottom=negdat['close'],
             height=negdat['open'] - negdat['close'],
             color='blue', alpha=1,
-            width=inter)
+            width=inter,edgecolor='white',linewidth=0.4)
     axs.ticklabel_format(axis='y', style='plain')
 
     #Volume

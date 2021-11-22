@@ -144,7 +144,7 @@ class ohlcv_krw:
 
         checked = False
         result = []
-
+        interratio = 0.9
         while not checked:
             checked = True
 
@@ -153,19 +153,44 @@ class ohlcv_krw:
             if res:
                 for i in range(len(self.interval)):
                     ser = res - self.__interval_order[self.interval[i]] * self.amount[i]
-                    res = tostr(res)
-                    ser = tostr(ser)
-                    sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{code}' and date <= '{res}' and date > '{ser}' ORDER BY date DESC"
+                    sql = f"SELECT * FROM bithumb_{self.interval[i]}_ohlcv WHERE code = '{code}' and date <= '{tostr(res)}' and date > '{tostr(ser)}' ORDER BY date DESC"
                     df = pd.read_sql(sql, _conn).iloc[::-1, :]
+                    df.index = df['date']
+                    df = df[[
+                        'code', 'open', 'high', 'low', 'close', 'volume'
+                    ]]
                     if len(df) == self.amount[i]:
-                        df.index = df['date']
-                        df = df[[
-                            'code', 'open', 'high', 'low', 'close', 'volume'
-                        ]]
                         result.append(
                             Ohlcv(df, title=f"{code}-{self.interval[i]}"))
+                    elif len(df) >= self.amount[i] * interratio:#보간
+
+                      reseconds = int(datetime.datetime.strftime(res,'%s'))
+                      divseconds = int(self.__interval_order[self.interval[i]].total_seconds())
+                      res = reseconds - reseconds % (divseconds)
+                      res = datetime.datetime.fromtimestamp(res)
+                      order = [res - (self.__interval_order[self.interval[i]]) * j for j in range(self.amount[i])]
+                      ordf = pd.DataFrame(index=order)
+
+                      missing = []
+
+                      for o in ordf.index:
+                        if o not in df.index:
+                          missing.append(o)
+                      
+                      tempdf = pd.DataFrame(index=missing,data={'code':code})
+
+                      df = pd.concat([df, tempdf])
+                      df = df.sort_index()
+                      df = df.interpolate(method='polynomial', order=3)
+                      print('interpolated')
+                      print(df)
+                      result.append(
+                            Ohlcv(df, title=f"{code}-{self.interval[i]}"))
+                    elif self.ticker=='random' or self.date=='random':
+                      checked = False
+                      break
                     else:
-                      print(len(df), self.amount[i])
+                      raise ValueError('DB Datas are not perfect')
             else:
                 checked = False
                 result = []
