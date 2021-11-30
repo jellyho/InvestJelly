@@ -181,7 +181,7 @@ class ohlcv_krw:
 
                       df = pd.concat([df, tempdf])
                       df = df.sort_index()
-                      df = df.interpolate(method='polynomial', order=3)
+                      df = df.interpolate(method='time')
                       print(f'{len(missing)} Rows Missed, Interpolated')
                       result.append(
                             TimeSeries(df, title=f"{code}-{self.interval[i]}"))
