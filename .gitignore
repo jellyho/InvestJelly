@@ -2,7 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+.breakpoints
+.replit
+.poetry.lock
+.pyproject.toml
 # C extensions
 *.so
 
