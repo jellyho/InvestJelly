@@ -3,7 +3,7 @@ from ..Structures import Indicator
 
 def CandleChart(ohlcv, indicators=None, tradehist=None):
     data = ohlcv.df
-    subplotli = [5,2]
+    subplotli = [4.5,1]
     mainindic = []
     subindic = []
     if indicators:
