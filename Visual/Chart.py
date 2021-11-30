@@ -86,5 +86,7 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
           indi.draw(axs=axs[0])
         elif indi._plotsetting() == 'sub':
           indi.draw(axs=axs[k+2])
-    plt.legend(loc='best', fontsize=3)
+    for a in axs:
+      a.legend(loc='best', fontsize=3)
+      
     plt.show()

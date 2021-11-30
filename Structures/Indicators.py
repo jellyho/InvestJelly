@@ -73,6 +73,9 @@ class BB(Indicator):
       plt.show()
 
 class MFI(Indicator):
+  def _plotsetting(self):
+    return 'sub'
+
   def method(self):
     d = self.df.copy()
     window = self.kwargs['window']
@@ -97,6 +100,9 @@ class MFI(Indicator):
     return d
 
 class stch_RSI(Indicator):
+  def _plotsetting(self):
+    return 'sub'
+
   def method(self):
     d = self.df.copy()
     window = self.kwargs['window']
@@ -112,6 +118,9 @@ class stch_RSI(Indicator):
     return d
 
 class CCI(Indicator):
+  def _plotsetting(self):
+    return 'sub'
+
   def method(self):
     d = self.df.copy()
     window = self.kwargs['window']
