@@ -92,7 +92,7 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
 
     for a in axs:
       a.legend(loc='best', fontsize=3)
-      axs.tick_params(axis='y', labelsize=3)
+      a.tick_params(axis='y', labelsize=3)
 
     axs[-1].tick_params(axis='x', labelsize=3, rotation=90)
     plt.show()
