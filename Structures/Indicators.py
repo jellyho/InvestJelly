@@ -60,13 +60,11 @@ class BB(Indicator):
   def draw(self, axs=None):
     if axs is not None:
       d = self.df
-      axs.plot(d.index, d['middle'], lw = 0.6, zorder=10)
       axs.plot(d.index, d['upper'], label='BB upper', lw = 0.6, zorder=10)
       axs.plot(d.index, d['lower'], label='BB lower', lw = 0.6, zorder=10)
       axs.fill_between(d.index, d['upper'], d['lower'], alpha = 0.3)
     else:
       d = self.df
-      plt.plot(d.index, d['middle'], lw = 0.6, zorder=10)
       plt.plot(d.index, d['upper'], label='BB upper', lw = 0.6, zorder=10)
       plt.plot(d.index, d['lower'], label='BB lower', lw = 0.6, zorder=10)
       plt.fill_between(d.index, d['upper'], d['lower'], alpha = 0.3)

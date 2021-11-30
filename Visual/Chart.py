@@ -20,13 +20,13 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
     fig, axs = plt.subplots(
         len(subplotli),
         1,
-        sharex=True,
+        sharex=False,
         gridspec_kw={'height_ratios': subplotli},
         dpi=200,
         figsize=(0.4 * (12 + 4 * (len(subplotli) - 1) * 0.6),
                  0.4 * (0.75 * (12 + 4 * (len(subplotli) - 1) * 0.6))))
 
-    axs[0].tick_params(axis='x', labelsize=3, rotation=90)
+    #axs[0].tick_params(axis='x', labelsize=3, rotation=90)
     fig.suptitle(f"{data['code'][0]} - CandleChart")
 
     fig.figsize = [10, 7.5]
@@ -90,9 +90,11 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
         indi = subindic[k](df=data)
         indi.draw(axs=axs[k+2])
 
-    for a in axs:
-      a.legend(loc='best', fontsize=3)
-      a.tick_params(axis='y', labelsize=3)
+    for i in range(len(axs)):
+      axs[i].legend(loc='best', fontsize=3)
+      axs[i].tick_params(axis='y', labelsize=3)
+      if i != 0:
+        axs[i].set_xticks([])
 
-    axs[-1].tick_params(axis='x', labelsize=3, rotation=90)
+    axs[0].tick_params(axis='x', labelsize=3)
     plt.show()
