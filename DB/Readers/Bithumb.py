@@ -1,7 +1,7 @@
 import pandas as pd
 from random import randrange
 import datetime
-from ...Structures import Ohlcv
+from ...Structures import TimeSeries
 
 
 class tickers_krw:
@@ -144,7 +144,7 @@ class ohlcv_krw:
 
         checked = False
         result = []
-        interratio = 0.9
+        interratio = 0.95
         while not checked:
             checked = True
 
@@ -161,7 +161,7 @@ class ohlcv_krw:
                     ]]
                     if len(df) == self.amount[i]:
                         result.append(
-                            Ohlcv(df, title=f"{code}-{self.interval[i]}"))
+                            TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     elif len(df) >= self.amount[i] * interratio:#보간
 
                       reseconds = int(datetime.datetime.strftime(res,'%s'))
@@ -182,15 +182,14 @@ class ohlcv_krw:
                       df = pd.concat([df, tempdf])
                       df = df.sort_index()
                       df = df.interpolate(method='polynomial', order=3)
-                      print('interpolated')
-                      print(df)
+                      print(f'{len(missing)} Rows Missed, Interpolated')
                       result.append(
-                            Ohlcv(df, title=f"{code}-{self.interval[i]}"))
+                            TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     elif self.ticker=='random' or self.date=='random':
                       checked = False
                       break
                     else:
-                      raise ValueError('DB Datas are not perfect')
+                      raise ValueError('Too Many Missing Rows')
             else:
                 checked = False
                 result = []
