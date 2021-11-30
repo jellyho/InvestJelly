@@ -4,12 +4,16 @@ from ..Structures import Indicator
 def CandleChart(ohlcv, indicators=None, tradehist=None):
     data = ohlcv.df
     subplotli = [5,2]
-
+    mainindic = []
+    subindic = []
     if indicators:
       if type(indicators)==list:
         for i in indicators:
           if i._plotsetting() == 'sub':
             subplotli.append(2)
+            subindic.append(i)
+          elif i._plotsetting() == 'main':
+            mainindic.append(i)
       else:
         raise ValueError('Wrong Indicators')
 
@@ -22,7 +26,6 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
         figsize=(0.4 * (12 + 4 * (len(subplotli) - 1) * 0.6),
                  0.4 * (0.75 * (12 + 4 * (len(subplotli) - 1) * 0.6))))
 
-    axs[0].tick_params(axis='y', labelsize=3)
     axs[0].tick_params(axis='x', labelsize=3, rotation=90)
     fig.suptitle(f"{data['code'][0]} - CandleChart")
 
@@ -75,18 +78,21 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
                 width=inter)
 
     axs[1].ticklabel_format(axis='y', style='plain')
-    axs[1].tick_params(axis='y', labelsize=3)
-    axs[1].tick_params(axis='x', labelsize=3, rotation=90)
+    
 
     
     if indicators:
-      for k in range(len(indicators)):
-        indi = indicators[k](df=data)
-        if indi._plotsetting() == 'main':
-          indi.draw(axs=axs[0])
-        elif indi._plotsetting() == 'sub':
-          indi.draw(axs=axs[k+2])
+      for k in mainindic:
+        indi = k(df=data)
+        indi.draw(axs=axs[0])
+
+      for k in range(len(subindic)):
+        indi = subindic[k](df=data)
+        indi.draw(axs=axs[k+2])
+
     for a in axs:
       a.legend(loc='best', fontsize=3)
-      
+      axs.tick_params(axis='y', labelsize=3)
+
+    axs[-1].tick_params(axis='x', labelsize=3, rotation=90)
     plt.show()
