@@ -46,7 +46,7 @@ class ohlcv_krw:
                     tickers = pybithumb.get_tickers('KRW')
                     for t in tickers:
                         try:
-                            df = pybithumb.get_candlestick(t, 'KRW', d)
+                            df = pybithumb.get_candlestick(t, 'KRW', d)[:-1]
                             print(
                                 '\r                                                  ',
                                 end="")
