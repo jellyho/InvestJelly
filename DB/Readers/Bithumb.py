@@ -183,7 +183,7 @@ class ohlcv_krw:
                       df = df.sort_index()
                       df = df.interpolate(method='time')
                       print(f'{len(missing)} Rows Missed, Interpolated')
-                      """"
+                      """
                       result.append(
                             TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     elif self.ticker=='random' or self.date=='random':
