@@ -163,7 +163,7 @@ class ohlcv_krw:
                         result.append(
                             TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     elif len(df) >= self.amount[i] * interratio:#보간
-
+                      """
                       reseconds = int(datetime.datetime.strftime(res,'%s'))
                       divseconds = int(self.__interval_order[self.interval[i]].total_seconds())
                       res = reseconds - reseconds % (divseconds)
@@ -183,6 +183,7 @@ class ohlcv_krw:
                       df = df.sort_index()
                       df = df.interpolate(method='time')
                       print(f'{len(missing)} Rows Missed, Interpolated')
+                      """"
                       result.append(
                             TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     elif self.ticker=='random' or self.date=='random':
