@@ -179,11 +179,6 @@ class ohlcv_krw:
                       df['volume'] = df['volume'].fillna(0)
 
                       result.append(TimeSeries(df, title=f"{code}-{self.interval[i]}"))
-                    elif self.ticker=='random' or self.date=='random':
-                      checked = False
-                      break
-                    else:
-                      raise ValueError('Too Many Missing Rows')
             else:
                 checked = False
                 result = []
