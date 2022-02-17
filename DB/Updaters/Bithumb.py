@@ -112,7 +112,7 @@ class ohlcv_krw:
                     sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
 
                     for r in df.itertuples():
-                        if checkdate(d, r.Index):
+                        if self.checkdate(d, r.Index):
                           sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
 
                     sql = sql[:-2]
