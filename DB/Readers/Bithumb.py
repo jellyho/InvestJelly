@@ -144,7 +144,6 @@ class ohlcv_krw:
 
         checked = False
         result = []
-        interratio = 0.95
         while not checked:
             checked = True
 

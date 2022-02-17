@@ -32,7 +32,7 @@ class ohlcv_krw:
 
     def _update(self, _conn):
         #업데이트 시작
-        def checkdate(self, t, d):
+        def checkdate(t, d):
           if t =='1m':
             return True
           elif t=='3m':
@@ -112,7 +112,7 @@ class ohlcv_krw:
                     sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
 
                     for r in df.itertuples():
-                        if self.checkdate(d, r.Index):
+                        if checkdate(d, r.Index):
                           sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
 
                     sql = sql[:-2]
