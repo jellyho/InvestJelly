@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 import pybithumb
 import pandas as pd
 
@@ -66,7 +66,7 @@ class ohlcv_krw:
         """
                 curs.execute(sql)
         _conn.commit()
-        print("Bithumb ohlcv_krw Update Started", datetime.today())
+        print("Bithumb ohlcv_krw Update Started", datetime.datetime.today())
         #업데이트시 오류 생겨도 프로그램 종료 방지
         with _conn.cursor() as curs:
             for d in self.interval:
@@ -126,5 +126,5 @@ class ohlcv_krw:
                 except Exception:
                     print(f'Network Error')
                 #업데이트 완료
-        print("\rBithumb market_krw Update Finished,", datetime.today(),
+        print("\rBithumb market_krw Update Finished,", datetime.datetime.today(),
               "                  ")
