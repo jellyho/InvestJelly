@@ -74,55 +74,52 @@ class ohlcv_krw:
                     #현재 빗썸에서 거래 가능한 코인 Ticker 목록을 받아옴.
                     tickers = pybithumb.get_tickers('KRW')
                     for t in tickers:
-                        try:
-                            df = pybithumb.get_candlestick(t, 'KRW', d)[:-1]
-                            print(
-                                '\r                                                  ',
-                                end="")
-                            print(f'\rAdding {len(df)} rows of {d}_{t}',
-                                  end=" - ")
-                            reseconds = int(datetime.datetime.strftime(df.index[-1],'%s'))
-                            stseconds = int(datetime.datetime.strftime(df.index[0],'%s'))
+                        df = pybithumb.get_candlestick(t, 'KRW', d)[:-1]
+                        print(
+                            '\r                                                  ',
+                            end="")
+                        print(f'\rAdding {len(df)} rows of {d}_{t}',
+                              end=" - ")
+                        reseconds = int(datetime.datetime.strftime(df.index[-1],'%s'))
+                        stseconds = int(datetime.datetime.strftime(df.index[0],'%s'))
 
-                            divseconds = int(self.__interval_order[d].total_seconds())
+                        divseconds = int(self.__interval_order[d].total_seconds())
 
-                            res = reseconds - reseconds % (divseconds)
-                            sts = stseconds - stseconds % (divseconds)
+                        res = reseconds - reseconds % (divseconds)
+                        sts = stseconds - stseconds % (divseconds)
 
-                            length = (res - sts) / divseconds
+                        length = (res - sts) / divseconds
 
-                            res = datetime.datetime.fromtimestamp(res)
+                        res = datetime.datetime.fromtimestamp(res)
 
-                            order = [res - (self.__interval_order[d]) * j for j in range(int(length)+1)]
+                        order = [res - (self.__interval_order[d]) * j for j in range(int(length)+1)]
 
-                            ordf = pd.DataFrame(index=order)
-                            missing = []
-                            for o in ordf.index:
-                              if o not in df.index:
-                                missing.append(o)
-                            tempdf = pd.DataFrame(index=missing,data={'code':t})
-                            
-                            df = pd.concat([df, tempdf])
-                            df = df.sort_index()
-                            df['open'] = df['open'].fillna(method='pad')
-                            df['high'] = df['high'].fillna(method='pad')
-                            df['low'] = df['low'].fillna(method='pad')
-                            df['close'] = df['close'].fillna(method='pad')
-                            df['volume'] = df['volume'].fillna(0)
+                        ordf = pd.DataFrame(index=order)
+                        missing = []
+                        for o in ordf.index:
+                          if o not in df.index:
+                            missing.append(o)
+                        tempdf = pd.DataFrame(index=missing,data={'code':t})
+                        
+                        df = pd.concat([df, tempdf])
+                        df = df.sort_index()
+                        df['open'] = df['open'].fillna(method='pad')
+                        df['high'] = df['high'].fillna(method='pad')
+                        df['low'] = df['low'].fillna(method='pad')
+                        df['close'] = df['close'].fillna(method='pad')
+                        df['volume'] = df['volume'].fillna(0)
 
-                            #DB업데이트 쿼리문
-                            sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
+                        #DB업데이트 쿼리문
+                        sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
 
-                            for r in df.itertuples():
-                                if checkdate(d, r.Index):
-                                  sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
+                        for r in df.itertuples():
+                            if checkdate(d, r.Index):
+                              sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
 
-                            sql = sql[:-2]
-                            curs.execute(sql)
-                            _conn.commit()
-                            print('finished', end="")
-                        except Exception:
-                            print(f'Network Error')
+                        sql = sql[:-2]
+                        curs.execute(sql)
+                        _conn.commit()
+                        print('finished', end="")
                 except Exception:
                     print(f'Network Error')
                 #업데이트 완료
