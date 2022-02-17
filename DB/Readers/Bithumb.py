@@ -160,32 +160,25 @@ class ohlcv_krw:
                         'code', 'open', 'high', 'low', 'close', 'volume'
                     ]]
                     if len(df) == self.amount[i]:
-                        result.append(
-                            TimeSeries(df, title=f"{code}-{self.interval[i]}"))
-                    elif len(df) >= self.amount[i] * interratio:#보간
-                      """
-                      reseconds = int(datetime.datetime.strftime(res,'%s'))
-                      divseconds = int(self.__interval_order[self.interval[i]].total_seconds())
-                      res = reseconds - reseconds % (divseconds)
-                      res = datetime.datetime.fromtimestamp(res)
-                      order = [res - (self.__interval_order[self.interval[i]]) * j for j in range(self.amount[i])]
+                      result.append(TimeSeries(df, title=f"{code}-{self.interval[i]}"))
+                    else:#보간
+                      order = [res - (self.__interval_order[self.interval[i]]) * j for j in range(int(self.amount[i])+1)]
+
                       ordf = pd.DataFrame(index=order)
-
                       missing = []
-
                       for o in ordf.index:
                         if o not in df.index:
                           missing.append(o)
-                      
                       tempdf = pd.DataFrame(index=missing,data={'code':code})
-
                       df = pd.concat([df, tempdf])
                       df = df.sort_index()
-                      df = df.interpolate(method='time')
-                      print(f'{len(missing)} Rows Missed, Interpolated')
-                      """
-                      result.append(
-                            TimeSeries(df, title=f"{code}-{self.interval[i]}"))
+                      df['open'] = df['open'].fillna(method='pad')
+                      df['high'] = df['high'].fillna(method='pad')
+                      df['low'] = df['low'].fillna(method='pad')
+                      df['close'] = df['close'].fillna(method='pad')
+                      df['volume'] = df['volume'].fillna(0)
+
+                      result.append(TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     elif self.ticker=='random' or self.date=='random':
                       checked = False
                       break
@@ -196,3 +189,4 @@ class ohlcv_krw:
                 result = []
 
         return result
+

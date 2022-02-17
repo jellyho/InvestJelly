@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 class Indicator:
   def __init__(self, df=None, **kwargs):
     if kwargs:

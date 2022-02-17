@@ -17,8 +17,10 @@ class TimeSeries:
         return f'{self.title} : from {self.df.index[0]} to {self.df.index[-1]}, {len(self.df)} Rows'
 
     def __getitem__(self, i):
-        if i in self.columns:
+        if isinstance(i, slice):
             return self.df[i]
+        elif i in self.columns:
+          return self.df[i]
         elif i == 'df':
           return self.df
         elif i=='columns':
@@ -26,7 +28,7 @@ class TimeSeries:
         elif i =='title':
           return self.title
         else:
-            return getattr(importlib.import_module('.Indicators', 'InvestJelly.Structures'),i)(self.df)
+          return getattr(importlib.import_module('.Indicators', 'InvestJelly.Structures'),i)(self.df)
         
     def __getattr__(self, i):
         if i in self.columns:

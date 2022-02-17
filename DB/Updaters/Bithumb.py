@@ -1,6 +1,6 @@
 from datetime import datetime
 import pybithumb
-
+import pandas as pd
 
 class ohlcv_krw:
     """
@@ -9,6 +9,17 @@ class ohlcv_krw:
 
     #DB에 데이터베이스 생성(첫 실행시)
     def __init__(self, intervals='all'):
+        self.__interval_order = {
+            '1m': datetime.timedelta(minutes=1),
+            '3m': datetime.timedelta(minutes=3),
+            '5m': datetime.timedelta(minutes=5),
+            '10m': datetime.timedelta(minutes=10),
+            '30m': datetime.timedelta(minutes=30),
+            '1h': datetime.timedelta(hours=1),
+            '6h': datetime.timedelta(hours=6),
+            '12h': datetime.timedelta(hours=12),
+            '24h': datetime.timedelta(days=1)
+        }
         if intervals == 'all':
             self.interval = [
                 '1m', '3m', '5m', '10m', '30m', '1h', '6h', '12h', '24h'
@@ -21,6 +32,24 @@ class ohlcv_krw:
 
     def _update(self, _conn):
         #업데이트 시작
+        def checkdate(self, t, d):
+          if t =='1m':
+            return True
+          elif t=='3m':
+            return d.minute % 3 == 0
+          elif t=='5m':
+            return d.minute % 5 == 0
+          elif t=='10m':
+            return d.minute % 10 == 0
+          elif t=='1h':
+            return d.minute == 0
+          elif t=='6h':
+            return d.hour % 6 == 0
+          elif t=='12h':
+            return d.hour % 12 == 0
+          else:
+            return d.hour == 0
+            
         with _conn.cursor() as curs:
             for d in self.interval:
                 sql = f"""
@@ -52,12 +81,41 @@ class ohlcv_krw:
                                 end="")
                             print(f'\rAdding {len(df)} rows of {d}_{t}',
                                   end=" - ")
+                            reseconds = int(datetime.datetime.strftime(df.index[-1],'%s'))
+                            stseconds = int(datetime.datetime.strftime(df.index[0],'%s'))
+
+                            divseconds = int(self.__interval_order[d].total_seconds())
+
+                            res = reseconds - reseconds % (divseconds)
+                            sts = stseconds - stseconds % (divseconds)
+
+                            length = (res - sts) / divseconds
+
+                            res = datetime.datetime.fromtimestamp(res)
+
+                            order = [res - (self.__interval_order[d]) * j for j in range(int(length)+1)]
+
+                            ordf = pd.DataFrame(index=order)
+                            missing = []
+                            for o in ordf.index:
+                              if o not in df.index:
+                                missing.append(o)
+                            tempdf = pd.DataFrame(index=missing,data={'code':t})
+                            
+                            df = pd.concat([df, tempdf])
+                            df = df.sort_index()
+                            df['open'] = df['open'].fillna(method='pad')
+                            df['high'] = df['high'].fillna(method='pad')
+                            df['low'] = df['low'].fillna(method='pad')
+                            df['close'] = df['close'].fillna(method='pad')
+                            df['volume'] = df['volume'].fillna(0)
 
                             #DB업데이트 쿼리문
                             sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
 
                             for r in df.itertuples():
-                                sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
+                                if checkdate(d, r.Index):
+                                  sql += f"('{t}', '{r.Index}', {r.open}, {r.high}, {r.low}, {r.close}, {r.volume}), "
 
                             sql = sql[:-2]
                             curs.execute(sql)
