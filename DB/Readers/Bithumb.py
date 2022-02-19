@@ -162,7 +162,7 @@ class ohlcv_krw:
                     if len(df) == self.amount[i]:
                       result.append(TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     else:#보간
-                      print(df)
+                      print('some rows inserted  automatically')
                       order = [res - (self.__interval_order[self.interval[i]]) * j for j in range(int(self.amount[i]))]
 
                       ordf = pd.DataFrame(index=order)
