@@ -124,6 +124,7 @@ class ohlcv_krw:
                 if self.date == 'latest':
                     return (df['date'][df.index[-1]])
                 elif self.date == 'random':
+                    print(df['date'])
                     return (df['date'][df.index[randrange(0, len(df))]])
                 else:
                     if datetime.datetime.strptime(self.date,
@@ -161,7 +162,8 @@ class ohlcv_krw:
                     if len(df) == self.amount[i]:
                       result.append(TimeSeries(df, title=f"{code}-{self.interval[i]}"))
                     else:#보간
-                      order = [res - (self.__interval_order[self.interval[i]]) * j for j in range(int(self.amount[i])+1)]
+                      print(df)
+                      order = [res - (self.__interval_order[self.interval[i]]) * j for j in range(int(self.amount[i]))]
 
                       ordf = pd.DataFrame(index=order)
                       missing = []
@@ -171,9 +173,9 @@ class ohlcv_krw:
                       tempdf = pd.DataFrame(index=missing,data={'code':code})
                       df = pd.concat([df, tempdf])
                       df = df.sort_index()
-                      df['open'] = df['open'].fillna(method='pad')
-                      df['high'] = df['high'].fillna(method='pad')
-                      df['low'] = df['low'].fillna(method='pad')
+                      df['open'] = df['close'].fillna(method='pad')
+                      df['high'] = df['close'].fillna(method='pad')
+                      df['low'] = df['close'].fillna(method='pad')
                       df['close'] = df['close'].fillna(method='pad')
                       df['volume'] = df['volume'].fillna(0)
 

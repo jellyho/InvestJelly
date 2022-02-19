@@ -79,34 +79,6 @@ class ohlcv_krw:
                         end="")
                     print(f'\rAdding {len(df)} rows of {d}_{t}',
                           end=" - ")
-                    reseconds = int(datetime.datetime.strftime(df.index[-1],'%s'))
-                    stseconds = int(datetime.datetime.strftime(df.index[0],'%s'))
-
-                    divseconds = int(self.__interval_order[d].total_seconds())
-
-                    res = reseconds - reseconds % (divseconds)
-                    sts = stseconds - stseconds % (divseconds)
-
-                    length = (res - sts) / divseconds
-
-                    res = datetime.datetime.fromtimestamp(res)
-
-                    order = [res - (self.__interval_order[d]) * j for j in range(int(length)+1)]
-
-                    ordf = pd.DataFrame(index=order)
-                    missing = []
-                    for o in ordf.index:
-                      if o not in df.index:
-                        missing.append(o)
-                    tempdf = pd.DataFrame(index=missing,data={'code':t})
-                    
-                    df = pd.concat([df, tempdf])
-                    df = df.sort_index()
-                    df['open'] = df['open'].fillna(method='pad')
-                    df['high'] = df['high'].fillna(method='pad')
-                    df['low'] = df['low'].fillna(method='pad')
-                    df['close'] = df['close'].fillna(method='pad')
-                    df['volume'] = df['volume'].fillna(0)
 
                     #DB업데이트 쿼리문
                     sql = f"REPLACE INTO bithumb_{d}_ohlcv (code, date, open, high, low, close, volume) VALUES "
