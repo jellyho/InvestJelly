@@ -18,11 +18,13 @@ class TimeSeries:
 
     def __getitem__(self, i):
         if isinstance(i, slice):
-            return self.df[i]
+          return self.df[i]
         elif i in self.columns:
           return self.df[i]
         elif i == 'df':
           return self.df
+        elif i == 'index':
+          return self.df.index
         elif i=='columns':
           return self.columns
         elif i =='title':
@@ -31,16 +33,20 @@ class TimeSeries:
           return getattr(importlib.import_module('.Indicators', 'InvestJelly.Structures'),i)(self.df)
         
     def __getattr__(self, i):
-        if i in self.columns:
-            return self.df[i]
+        if isinstance(i, slice):
+          return self.df[i]
+        elif i in self.columns:
+          return self.df[i]
         elif i == 'df':
           return self.df
+        elif i == 'index':
+          return self.df.index
         elif i=='columns':
           return self.columns
         elif i =='title':
           return self.title
         else:
-            return getattr(importlib.import_module('.Indicators', 'InvestJelly.Structures'),i)(self.df)
+          return getattr(importlib.import_module('.Indicators', 'InvestJelly.Structures'),i)(self.df)
 
     def __len__(self):
         return len(self.df)

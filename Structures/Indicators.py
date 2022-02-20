@@ -19,9 +19,13 @@ class Indicator:
       self.df = self.method()
     
     return self
-  
+
   def label(self):
     return f'{self.__class__.__name__}'
+
+  def __getitem__(self, i):
+    return self.method()[i]
+    
   def method(self):
     return self.df
 

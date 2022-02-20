@@ -1,3 +1,6 @@
 class Agent:
   def __init__(self):
-    pass
+    self.Data = None
+
+  def act(self, data):#
+    return None

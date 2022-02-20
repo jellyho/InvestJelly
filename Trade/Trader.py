@@ -1,6 +1,5 @@
 import pandas as pd
 pd.options.mode.chained_assignment = None
-import numpy as np
 from enum import Enum
 
 class Action(Enum):
@@ -18,6 +17,7 @@ class Trader:
     self.Agent = Agent
     self.Portfolio = Port if Port else Portfolio()
     self.TradeHistory = TradeHistory()
+    self.ActDict = {Action.BUY:self.Buy, Action.SELL:self.Sell, Action.LONG:self.Long, Action.CLOSE_LONG:self.Close_Long, Action.SHORT:self.Short, Action.CLOSE_SHORT:self.Close_Short}
 
   def method_Buy(self, TI):#
     return TI
@@ -30,6 +30,17 @@ class Trader:
 
   def method_Short(self, TI):#
     return TI
+
+  def trade(self):
+    while self.Env.Observable():
+      data = self.Env.Observe()
+      acts = self.Agent.act(data)
+      for act in acts:
+        t = TradeInfo()
+        t.append(act.Time, act.Action, act.Code, act.Amount, act.Price, act.Fee)
+        self.ActDict[act.Action](t)
+      self.Portfolio.update(data)
+
 
   def Buy(self, ti):
     ti = self.method_Buy(ti)
@@ -127,7 +138,7 @@ class Portfolio:
     self.Value = (self.Ports['CPrice'] * self.Ports['Amount']).sum() + self.Cash
 
   def update(self, ObservedData=None):
-    if ObservedData:
+    if ObservedData is not None:
       self.update_Prices(ObservedData)
     self.cal_Port_Yields()
     self.load_Cash()
@@ -135,7 +146,12 @@ class Portfolio:
     self.cal_Yield()
 
   def update_Prices(self, ObservedData):#
-    pass
+    last = ObservedData.df.iloc[-1,:]
+    price = last['close']
+    code = last['code']
+    idx = self.Ports['Code'] == code
+    for id in idx:
+      self.Ports.loc[idx, 'CPrice'] = price
 
   def __str__(self):
     return f'\nPortFolio Cash:{self.Cash}, Yield:{round(self.Yield,2)}%, Total Value:{self.Value}\n' + str(self.Ports)
