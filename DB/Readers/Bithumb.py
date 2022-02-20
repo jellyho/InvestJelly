@@ -3,7 +3,6 @@ from random import randrange
 import datetime
 from ...Structures import TimeSeries
 
-
 class tickers_krw:
     def __init__(self, intervals):
         if intervals == 'all':
@@ -173,12 +172,24 @@ class ohlcv_krw:
                       tempdf = pd.DataFrame(index=missing,data={'code':code})
                       df = pd.concat([df, tempdf])
                       df = df.sort_index()
-                      df['open'] = df['close'].fillna(method='pad')
-                      df['high'] = df['close'].fillna(method='pad')
-                      df['low'] = df['close'].fillna(method='pad')
-                      df['close'] = df['close'].fillna(method='pad')
-                      df['volume'] = df['volume'].fillna(0)
-
+                      li = df.index
+                      for j, k in enumerate(li):
+                        if k in tempdf.index and j != 0:
+                          te = df.loc[li[j-1], 'close']
+                          df.loc[k, 'open'] = te
+                          df.loc[k, 'high'] = te
+                          df.loc[k, 'low'] = te
+                          df.loc[k, 'close'] = te
+                          df.loc[k, 'volume'] = 0
+                      li = li[::-1]
+                      for j, k in enumerate(li):
+                        if k in tempdf.index and k in df['open'].isnull():
+                          te = df.loc[li[j-1], 'open']
+                          df.loc[k, 'open'] = te
+                          df.loc[k, 'high'] = te
+                          df.loc[k, 'low'] = te
+                          df.loc[k, 'close'] = te
+                          df.loc[k, 'volume'] = 0
                       result.append(TimeSeries(df, title=f"{code}-{self.interval[i]}"))
             else:
                 checked = False

@@ -48,7 +48,7 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
                 ymin=negdat['low'],
                 ymax=negdat['high'],
                 color='blue', alpha=1, lw=0.5,zorder=5)
-    print(data)
+
     axs[0].bar(x=posdat.index,
             bottom=posdat['open'],
             height=posdat['close'] - posdat['open'],
