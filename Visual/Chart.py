@@ -35,7 +35,8 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
     axs[0].set_ylim(minc - (maxc - minc) / 3.5, maxc + (maxc - minc) / 6)
 
     posdat = data[data['open'] < data['close']]
-    negdat = data[data['open'] >= data['close']]
+    negdat = data[data['open'] > data['close']]
+    samedat = data[data['open'] == data['close']]
 
     inter = (data.index[1] - data.index[0])* 0.9
     axs[0].grid(zorder=0)
@@ -59,6 +60,13 @@ def CandleChart(ohlcv, indicators=None, tradehist=None):
             height=negdat['open'] - negdat['close'],
             color='blue', alpha=1,
             width=inter,edgecolor='white',linewidth=0,zorder=3)
+
+    axs[0].bar(x=samedat.index,
+            bottom=samedat['open'],
+            height=0.001,
+            color='red',alpha=1,
+            width=inter, edgecolor='white',linewidth=0.5,zorder=3)
+
     axs[0].ticklabel_format(axis='y', style='plain')
 
     #Volume

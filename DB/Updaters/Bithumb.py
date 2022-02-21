@@ -42,7 +42,7 @@ class ohlcv_krw:
           elif t=='10m':
             return d.minute % 10 == 0
           elif t=='30m':
-            return d.minute % 10 == 0
+            return d.minute % 30 == 0
           elif t=='1h':
             return d.minute == 0
           elif t=='6h':
