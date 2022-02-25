@@ -75,7 +75,11 @@ class ohlcv_krw:
                 #현재 빗썸에서 거래 가능한 코인 Ticker 목록을 받아옴.
                 tickers = pybithumb.get_tickers('KRW')
                 for t in tickers:
-                    df = pybithumb.get_candlestick(t, 'KRW', d)[:-1]
+                    df = pybithumb.get_candlestick(t, 'KRW', d)
+                    if len(df)==1:
+                      continue
+                    else :
+                      df = df[:-1]
                     print(
                         '\r                                                  ',
                         end="")
